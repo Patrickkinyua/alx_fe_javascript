@@ -200,3 +200,13 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 setInterval(syncWithServer, 30000);
+
+
+
+categoryFilter.addEventListener("input", (e) => {
+  const filterValue = e.target.value.toLowerCase();
+  const filteredQuotes = quotes.filter(quote =>
+    quote.category.toLowerCase().includes(filterValue)
+  );
+  displayQuotes(filteredQuotes);
+});
