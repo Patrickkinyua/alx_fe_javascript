@@ -1,3 +1,5 @@
+
+
 // ==========================
 // QUOTES WITH STORAGE & SYNC
 // ==========================
@@ -70,6 +72,34 @@ function showRandomQuote() {
   saveLastCategory(selectedCategory);
 }
 
+// -----------------
+// FORM CREATION
+// -----------------
+function createAddQuoteForm() {
+  const formContainer = document.createElement("div");
+  formContainer.className = "form-container";
+
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.type = "text";
+  textInput.placeholder = "Enter a new quote";
+
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+
+  const addBtn = document.createElement("button");
+  addBtn.textContent = "Add Quote";
+  addBtn.addEventListener("click", addQuote);
+
+  formContainer.appendChild(textInput);
+  formContainer.appendChild(categoryInput);
+  formContainer.appendChild(addBtn);
+
+  document.body.appendChild(formContainer);
+}
+
 function addQuote() {
   const textInput = document.getElementById("newQuoteText");
   const categoryInput = document.getElementById("newQuoteCategory");
@@ -136,7 +166,6 @@ async function syncWithServer() {
     const response = await fetch("https://jsonplaceholder.typicode.com/posts?_limit=5");
     const serverQuotes = await response.json();
 
-    // Map server data to our structure
     const mapped = serverQuotes.map(item => ({
       text: item.title,
       category: "Server"
@@ -160,14 +189,14 @@ categorySelect.addEventListener("change", () => {
   saveLastCategory(categorySelect.value);
 });
 
-// Restore last viewed quote on load
 document.addEventListener("DOMContentLoaded", () => {
   populateCategories();
+  createAddQuoteForm(); // <- dynamically add the form on page load
+
   const lastQuote = sessionStorage.getItem("lastQuote");
   if (lastQuote) {
     quoteDisplay.textContent = lastQuote;
   }
 });
 
-// Periodic sync every 30s
 setInterval(syncWithServer, 30000);
